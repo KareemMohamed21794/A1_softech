@@ -1,0 +1,36 @@
+version: "3"
+services:
+    webapp-server:
+        build:
+            context: .
+            dockerfile: Dockerfile-PHP
+        volumes:
+            - "./:/var/www/html/"
+            - "./files/000-default.conf:/etc/apache2/sites-available/000-default.conf"
+        ports:
+            - "8002:80"
+
+    mysql-server:
+        image: "mysql:8.0.30"
+        environment:
+            MYSQL_ROOT_PASSWORD: "root"
+            MYSQL_DATABASE: "root"
+        volumes:
+            - "mysql-data-tcal:/var/lib/mysql/"
+        ports:
+            - "33062:3306"
+        restart: always
+
+    redis-server:
+        image: "redis:7.0.4"
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - "8080:80"
+        environment:
+            - PMA_ARBITRARY=1
+
+volumes:
+  mysql-data-tcal:
